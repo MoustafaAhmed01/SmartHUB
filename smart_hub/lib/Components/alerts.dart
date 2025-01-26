@@ -2,6 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
+/*
+ Description: This function used to to display an error message on the screen
+ Just by receiving the context of the screen where you are and some sort of data
+ and the alert type
+
+ You should call it by using the errorCheck function
+ */
 void alertFun(
     BuildContext context, String title, String descrip, AlertType alertType) {
   Alert(
@@ -46,43 +53,13 @@ void alertFun(
   ).show();
 }
 
+/*
+Description: This function receives the context of the current UI screen and the
+error message.
+You have to setup your own command, message and the Alert type.
+ */
 void errorCheck(BuildContext context, String errorMessage) {
-  if (errorMessage == 'email-already-in-use') {
-    /* show the pop up window */
-    alertFun(
-        context, 'Error', 'This Email is already in use!', AlertType.warning);
-  } else if (errorMessage == 'weak-password') {
-    alertFun(context, 'Error', 'Password must be more than 6 characters!',
-        AlertType.warning);
-  } else if (errorMessage == 'invalid-credential') {
-    alertFun(context, 'Error', 'Email is not registered on this app!',
-        AlertType.error);
-  } else if (errorMessage == 'invalid-email') {
-    alertFun(context, 'Error', 'Invalid Email!', AlertType.error);
-  } else if (errorMessage == 'channel-error') {
-    alertFun(context, 'Error', 'Empty Field!', AlertType.error);
-  } else if (errorMessage == 'NotAvailable') {
-    alertFun(
-        context,
-        'Error',
-        'No Authentication Available\nUse your Email and Password!',
-        AlertType.error);
-  } else if (errorMessage == 'Timeout') {
-    alertFun(context, 'Connection Timeout',
-        'Bad internet connection\nPlease try again later!', AlertType.warning);
-  } else if (errorMessage == 'SubjectMessageClear') {
-    alertFun(
-        context,
-        'Empty Subject or Message',
-        'Please ensure that all necessary containers have been properly filled!',
-        AlertType.warning);
-  } else if (errorMessage == 'SpeedClear') {
-    alertFun(
-        context,
-        'Empty Container',
-        'Please ensure that you have entered a correct speed integer value within range of 0 - 500 Km/h!',
-        AlertType.warning);
-  } else if (errorMessage == 'BLE') {
+  if (errorMessage == 'BLE') {
     alertFun(
         context,
         'Permission Error',
@@ -106,7 +83,7 @@ void toastFun(String title, bool isDark) {
   Fluttertoast.showToast(
     msg: title,
     gravity: ToastGravity.BOTTOM,
-    backgroundColor: isDark ? Colors.white24 : Colors.black87 ,
+    backgroundColor: isDark ? Colors.white24 : Colors.black87,
     textColor: Colors.white,
     fontSize: 16.0,
   );

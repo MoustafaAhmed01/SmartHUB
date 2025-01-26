@@ -15,6 +15,7 @@ late final StreamSubscription<ConnectionStateUpdate> connectionNUM;
 late final DiscoveredDevice connectedDevice;
 late final QualifiedCharacteristic characteristic;
 
+
 void main() {
   runApp(
     /*  Phoenix Package used to restart the app https://pub.dev/packages/flutter_phoenix */

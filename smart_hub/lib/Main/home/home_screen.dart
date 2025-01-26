@@ -55,7 +55,10 @@ class _HomeScreenState extends State<HomeScreen> {
   /* Local storage  */
   late final SharedPreferences prefs;
   late String savedDeviceID;
+
+  /* This variable is responsible for the loading cards package if it's false then it means that the variables isn't ready to be displayed to the user So, it will should some containers are loading */
   bool screenReady = false;
+
   /* Receiving Var */
   final List<int> _receivedData = [];
   String _dataToSend = ""; // Variable to store the data to send
@@ -257,6 +260,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // Function to receive data from the connected device
+  /// TODO: after the receiving the data we will need to link the variables that will be showing the info to the corresponding received data.
   void _receiveData() {
     FlutterReactiveBle()
         .subscribeToCharacteristic(widget.characteristic)
@@ -478,7 +482,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            !screenReady
+            screenReady
                 ? batteryContainer(
                     screenDataProvider: screenDataProvider,
                     isConnected: isConnected,
@@ -502,7 +506,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 20,
             ),
-            !screenReady
+            screenReady
                 ? home_wireless(
                     isDark: screenDataProvider.isThemeDark,
                     wirelessPower: wirelessPower,
@@ -543,7 +547,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 25,
             ),
-            !screenReady
+            screenReady
                 ? Container(
                     width: double.infinity, // Width of the circle
                     height: 120, // Height of the circle
@@ -580,7 +584,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 10,
             ),
-            !screenReady
+            screenReady
                 ? Container(
                     width: double.infinity, // Width of the circle
                     height: 120, // Height of the circle
@@ -620,7 +624,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Row(
               children: [
                 Expanded(
-                  child: !screenReady
+                  child: screenReady
                       ? Container(
                           width: double.infinity,
                           height: 120,
@@ -724,7 +728,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: 15,
                 ),
                 Expanded(
-                  child: !screenReady
+                  child: screenReady
                       ? Container(
                           width: double.infinity,
                           height: 120,
@@ -830,6 +834,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 10,
             ),
             Container(
+              /* Just for debugging */
               width: double.infinity,
               decoration: BoxDecoration(
                 color: screenDataProvider.isThemeDark
@@ -843,14 +848,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
-                  Text(
+                  const Text(
                     'Access Specific Bytes (Hex & Char):',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
 
                   Text('Byte 1: ${byteDisplay(0)}'),
                   Text('Byte 2: ${byteDisplay(1)}'),
@@ -868,7 +873,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text('Byte 14: ${byteDisplay(13)}'),
                   Text('Byte 15: ${byteDisplay(14)}'),
 
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
                   TextField(
@@ -877,19 +882,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         _dataToSend = text; // Update the dataToSend variable
                       });
                     },
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Type data to send',
                     ),
                     controller: null, // No TextEditingController used here
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   // Send button
                   ElevatedButton(
                     onPressed: () {
                       sendData(_dataToSend); // Send the data
                     },
-                    child: Text('Send'),
+                    child: const Text('Send'),
                   ),
                 ],
               ),

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -5,12 +7,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_hub/Components/alerts.dart';
 import 'package:smart_hub/Main/Support/support.dart';
 import 'package:smart_hub/Main/home/home_screen.dart';
-import 'dart:async';
+
 import '../../Components/ble_alerts.dart';
 import '../../Constants/ble_constants.dart'; // For Timer functionality
 
 /// -----------------Global Variables-------------------------*
-bool g_ScreenReady = false;
 
 /// -----------------------------------------------------------*
 class ble_ui_screen extends StatefulWidget {
@@ -25,6 +26,9 @@ class ble_ui_screen extends StatefulWidget {
 class _ble_ui_screenState extends State<ble_ui_screen>
     with SingleTickerProviderStateMixin {
   /// ---------------------Local Variables Section----------------------*
+  /* Variables used to run the BLE is required.
+  * These variables used to init the BLE, scan the surrounding devices, and
+  * saving the characteristics of the connected device */
   final flutterReactiveBle = FlutterReactiveBle();
   late StreamSubscription<DiscoveredDevice> _scanStream;
   late Stream<BleStatus> _bleStatusStream;
@@ -32,10 +36,17 @@ class _ble_ui_screenState extends State<ble_ui_screen>
   late QualifiedCharacteristic _Characteristic;
   late DiscoveredDevice _connectedDevice;
   late StreamSubscription<ConnectionStateUpdate> _connection;
-  bool isScanning = false;
-  bool isPairing = false;
-  bool isNavigated = false;
-  Timer? _scanTimer;
+
+  bool isScanning =
+      false; /* If the used pressed on the BLE icon this variable will be true otherwise it will be false.
+       It's just required to know if the app is currently scanning for a new devices or not */
+  bool isPairing =
+      false; /* This variable saves the state of the BLE. If it's connected to a device then it will be true
+    if not it will false */
+  bool isNavigated = false; /*  */
+
+  Timer?
+      _scanTimer; /* Timer to strict the scanning process to be limited with a certain time */
   Map<String, bool> isLoadingMap = {};
   Map<String, bool> isPairedMap = {};
 
@@ -47,7 +58,8 @@ class _ble_ui_screenState extends State<ble_ui_screen>
   /* Local storage  */
   late final SharedPreferences prefs;
 
-  final Map<String, StreamSubscription<ConnectionStateUpdate>> _subscriptions = {};
+  final Map<String, StreamSubscription<ConnectionStateUpdate>> _subscriptions =
+      {};
   Map<String, bool> connectedDevices =
       {}; // Track connection state by device ID
 
@@ -65,6 +77,8 @@ class _ble_ui_screenState extends State<ble_ui_screen>
       } else if (status == BleStatus.poweredOff) {
         print('Bluetooth is OFF');
         errorCheckble(context, 'BLE_OFF');
+
+        /// TODO: save the state of the bluetooth state in a variable because when the user presses ok in case he got the pop message that his bluetooth is turned off. The pop message will just disappear. So, we need to handle it by saving the state of the BLE and then turning off the control from the BLE Icon make it non-responsive till the user turn it back on.
       } else {
         print('Bluetooth status: $status');
       }
@@ -164,6 +178,7 @@ class _ble_ui_screenState extends State<ble_ui_screen>
               deviceId: device.id,
             );
 
+            /// TODO: We need to make sure that the device is connected to smart hub because like that if the device is connected to any bluetooth device it will take you to the home screen. So, we need to make sure that the user is pairing with a correct device. We can do this by 1- making sure the device name is SmartHUB  2- exchanging some info before navigating like receiving a specific pattern to make sure that's it  ///
             _connectedDevice = device;
             toastFun('Connected to ${device.name}', true);
             isLoadingMap[device.id] = false;

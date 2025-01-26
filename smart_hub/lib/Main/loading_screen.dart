@@ -6,10 +6,10 @@ import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_hub/Main/BLE/ble_ui.dart';
+
 import '../Components/alerts.dart';
 import '../Components/ble_alerts.dart';
 import '../Constants/AnimatedColors.dart';
-
 import '../Constants/ble_constants.dart';
 import '../Constants/version.dart';
 import 'home/home_screen.dart';
@@ -24,23 +24,38 @@ class welcome_loading_screen extends StatefulWidget {
 
 class _welcome_loading_screenState extends State<welcome_loading_screen>
     with SingleTickerProviderStateMixin {
-  double batteryLevel = 0.0;
-  bool isGlobalVariableTrue = false;
-  bool blePermissionGranted = false;
+  double batteryLevel =
+      0.0; /* The battery level is used in the loading screen which has the animation of loading percentage */
+  bool isGlobalVariableTrue =
+      false; /* holds the state of the battery loading percentage if it was >75 then it will be true to change the animation to another text */
+  bool blePermissionGranted =
+      false; /* This variable holds the state of the permissions required */
+
   late AnimationController _controller;
   late Animation<double> _animation;
-  late final FlutterReactiveBle flutterReactiveBle;
-  bool isScanning = false;
-  late StreamSubscription<DiscoveredDevice> _scanStream;
-  final List<DiscoveredDevice> _foundDevices = [];
-  late DiscoveredDevice _connectedDevice;
-  late StreamSubscription<ConnectionStateUpdate> _connection;
-  late QualifiedCharacteristic _Characteristic;
 
-  bool _isConnected = false;
-  late String SavedDeviceID;
+  late final FlutterReactiveBle
+      flutterReactiveBle; /* This variable used to save info about the BLE device*/
+  bool isScanning =
+      false; /* This variable used to know the state of the BLE whether it's scanning the surrounded devices or not */
+  late StreamSubscription<DiscoveredDevice>
+      _scanStream; /* Steam for saving the scanned devices */
+  final List<DiscoveredDevice> _foundDevices =
+      []; /* Saves the scanned devices */
+  late DiscoveredDevice
+      _connectedDevice; /* If found the required device then I will save it in this variable */
+  late StreamSubscription<ConnectionStateUpdate>
+      _connection; /* Has some info about the connected device */
+  late QualifiedCharacteristic
+      _Characteristic; /* Saves the characteristics of the connected device */
+
+  bool _isConnected =
+      false; /* Checks whether the mobile is already connected to the power bank or not */
+  late String SavedDeviceID; /* Saving device ID */
+
   /* Local storage  */
   late final SharedPreferences prefs;
+
   /// -------------------------Functions---------------------------------*
 /*
   Title: Package init
@@ -124,7 +139,7 @@ class _welcome_loading_screenState extends State<welcome_loading_screen>
           } else if (batteryLevel == 1 && blePermissionGranted == false) {
             permissionsError(context, 'BLE_PERM');
           }
-          /* If the battery level exceeds a certain level then display something else */
+          /* If the battery level exceeds a certain level then it will display another text */
           if (batteryLevel >= 0.75) {
             isGlobalVariableTrue = true;
           }

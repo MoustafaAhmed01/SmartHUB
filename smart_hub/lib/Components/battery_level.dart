@@ -2,13 +2,24 @@ import 'package:flutter/material.dart';
 
 import '../Constants/battery_constants.dart';
 
+/*
+  Description:
+  - This class handles the battery shape of the power bank.
+  - You should pass some variables at first such as:
+   * Battery Level
+   * is the power bank connected to the charger or not
+   * Constant
+   * The current theme which is already saved by a provider
+
+ */
 class BatteryIndicator extends StatelessWidget {
   final double batteryLevel; // A value between 0 and 1
   final bool isCharging;
   final double circleRadius;
   final bool isDark;
 
-  const BatteryIndicator({super.key, 
+  const BatteryIndicator({
+    super.key,
     required this.batteryLevel,
     required this.isCharging,
     required this.circleRadius,
@@ -51,6 +62,7 @@ class BatteryIndicator extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Stack(
+                /* Stack is used to draw the levels of the battery */
                 children: [
                   // Outer battery container (battery outline)
                   Container(
@@ -80,7 +92,7 @@ class BatteryIndicator extends StatelessWidget {
                       ),
                     ),
                   ),
-                  !isCharging
+                  isCharging
                       ? Positioned(
                           left: 16,
                           top: 2,
